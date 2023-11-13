@@ -1,8 +1,5 @@
 ﻿  client.cpp
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Coursework\clientProject\sfmlProject\client.cpp(45,68): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Coursework\clientProject\sfmlProject\client.cpp(50,68): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Coursework\clientProject\sfmlProject\client.cpp(72,7): warning C4101: 'data': unreferenced local variable
-  server.cpp
-  source.cpp
-  Generating Code...
-  sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Coursework\clientProject\x64\Debug\sfmlProject.exe
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(44,68): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(48,68): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(78,7): warning C4101: 'data': unreferenced local variable
+  sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\x64\Debug\sfmlProject.exe

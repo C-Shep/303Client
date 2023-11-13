@@ -9,8 +9,7 @@ int main()
 {
 	sf::IpAddress inputAddress;
 
-	//Packet
-	sf::Packet packet;
+
 
 	std::cout << "Enter the Address of Server: ";
 	std::cin >> inputAddress;
@@ -44,13 +43,16 @@ int main()
 			{
 				shape.setPosition(shape.getPosition().x, shape.getPosition().y - 3.0);
 			}
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			{
 				shape.setPosition(shape.getPosition().x, shape.getPosition().y + 3.0);
 			}
-			float yy = shape.getPosition().y;
-			packet << yy;
+
+		//	float yy = shape.getPosition().y;
+
+			//Packet
+			sf::Packet packet;
+			packet << shape.getPosition().y;
 
 			//TCP socket
 			if (socket.send(packet) != sf::Socket::Done)
