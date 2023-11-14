@@ -3,13 +3,31 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 
+struct Player
+{
+	int id = 0;
+	float xx = 10.0f;
+	float yy = 10.0f;
+};
 
+sf::Packet& operator << (sf::Packet& packet, const Player& player)
+{
+	return packet << player.id << player.xx << player.yy;
+}
+
+sf::Packet& operator >> (sf::Packet& packet, Player& player)
+{
+	return packet >> player.id >> player.xx >> player.yy;
+}
 
 int main()
 {
+	Player me;
+	Player other;
+
+	Player playerArray[2];
+
 	sf::IpAddress inputAddress;
-
-
 
 	std::cout << "Enter the Address of Server: ";
 	std::cin >> inputAddress;
@@ -26,10 +44,12 @@ int main()
 		std::cout << "CONNECTED\n";
 	}
 
-	
-	sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-	sf::CircleShape shape(10.0f);
-	shape.setFillColor(sf::Color::Green);
+	sf::RenderWindow window(sf::VideoMode(200, 200), "Pong!");
+	sf::CircleShape myPaddle(10.0f);
+	myPaddle.setFillColor(sf::Color::Green);
+
+	sf::CircleShape theirPaddle(20.0f);
+	theirPaddle.setFillColor(sf::Color::Red);
 
 	while (window.isOpen())
 	{
@@ -37,57 +57,62 @@ int main()
 		while (window.pollEvent(event))
 		{
 			if (event.type == sf::Event::Closed)
+			{
 				window.close();
+			}
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 			{
-				shape.setPosition(shape.getPosition().x, shape.getPosition().y - 3.0);
+				playerArray[me.id].yy -= 3.0f;
+				
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			{
-				shape.setPosition(shape.getPosition().x, shape.getPosition().y + 3.0);
+				playerArray[me.id].yy += 3.0f;
 			}
 
-		//	float yy = shape.getPosition().y;
-
+			//Set Shapes Pos
+			myPaddle.setPosition(playerArray[me.id].xx, playerArray[me.id].yy);
+			
 			//Packet
 			sf::Packet packet;
-			packet << shape.getPosition().y;
+			packet<< playerArray[me.id];
 
-			//TCP socket
+			//Send my data to the server
 			if (socket.send(packet) != sf::Socket::Done)
 			{
 				std::cout << "ERROR\n";
 			}
 
+			//Receive Data
+			sf::Packet packet2;
+
+			if (socket.receive(packet2) == sf::Socket::Done)
+			{
+				if (packet2 >> playerArray[0] >> playerArray[1])
+				{
+					std::cout << "RECEIVED POSITION: " << (playerArray[0].yy) << "\n";
+					std::cout << "RECEIVED POSITION: " << (playerArray[1].yy) << "\n";
+				}
+			}
+
+			if (me.id == 0)
+			{
+				other.yy = playerArray[1].yy;
+				theirPaddle.setPosition(playerArray[1].xx, playerArray[1].yy);
+			}
+			else {
+				other.yy = playerArray[0].yy;
+				theirPaddle.setPosition(playerArray[1].xx, playerArray[1].yy);
+			}
+
+
+			window.clear();
+			window.draw(myPaddle);
+			window.draw(theirPaddle);
+			window.display();
 		}
-
-		window.clear();
-		window.draw(shape);
-		window.display();
 	}
-
-	//return 0;
-
-
-
-	char data[100];
-
-
-
-	std::cout << "DATA SENT\n";
-
-
-	//Recieve Data
-	char recdata[100];
-	std::size_t received;
-
-	if (socket.receive(recdata, 100, received) != sf::Socket::Done)
-	{
-		//EROOR
-	}
-
-	std::cout << "Received" << received << " bytes " << std::endl;
 
 	std::cout << "End\n";
 	return 0;
