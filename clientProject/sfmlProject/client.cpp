@@ -22,8 +22,10 @@ sf::Packet& operator >> (sf::Packet& packet, Player& player)
 
 int main()
 {
-	Player me;
-	Player other;
+	//Player me;
+	//Player other;
+
+	int myID;
 
 	Player playerArray[2];
 
@@ -32,6 +34,12 @@ int main()
 	std::cout << "Enter the Address of Server: ";
 	std::cin >> inputAddress;
 	std::cout << "\nThanks\n";
+
+	std::cout << "Enter 0 or 1: ";
+	std::cin >> myID;
+	std::cout << "\nThanks\n";
+
+
 
 	std::cout << "Start Client\n";
 	sf::TcpSocket socket;
@@ -63,20 +71,20 @@ int main()
 
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
 			{
-				playerArray[me.id].yy -= 3.0f;
-				
+				playerArray[myID].yy -= 3.0f;
+
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
 			{
-				playerArray[me.id].yy += 3.0f;
+				playerArray[myID].yy += 3.0f;
 			}
 
 			//Set Shapes Pos
-			myPaddle.setPosition(playerArray[me.id].xx, playerArray[me.id].yy);
-			
+			myPaddle.setPosition(playerArray[myID].xx, playerArray[myID].yy);
+
 			//Packet
 			sf::Packet packet;
-			packet<< playerArray[me.id];
+			packet << playerArray[myID];
 
 			//Send my data to the server
 			if (socket.send(packet) != sf::Socket::Done)
@@ -91,19 +99,19 @@ int main()
 			{
 				if (packet2 >> playerArray[0] >> playerArray[1])
 				{
-					std::cout << "RECEIVED POSITION: " << (playerArray[0].yy) << "\n";
-					std::cout << "RECEIVED POSITION: " << (playerArray[1].yy) << "\n";
+					std::cout << "Received Position: " << (playerArray[0].yy) << " From Player(0): " << (playerArray[0].id) << "\n";
+					std::cout << "Received Position: " << (playerArray[1].yy) << " From Player(1): " << (playerArray[1].id) << "\n";
 				}
 			}
 
-			if (me.id == 0)
+			if (myID == 0)
 			{
-				other.yy = playerArray[1].yy;
+			//	other.yy = playerArray[1].yy;
 				theirPaddle.setPosition(playerArray[1].xx, playerArray[1].yy);
 			}
 			else {
-				other.yy = playerArray[0].yy;
-				theirPaddle.setPosition(playerArray[1].xx, playerArray[1].yy);
+			//	other.yy = playerArray[0].yy;
+				theirPaddle.setPosition(playerArray[0].xx, playerArray[0].yy);
 			}
 
 
