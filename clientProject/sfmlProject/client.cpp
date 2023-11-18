@@ -28,6 +28,7 @@ int main()
 	char userType = '?';
 
 	sf::Vector2f myPos, theirPos;
+	int lastDir = 1;
 
 	do
 	{
@@ -79,6 +80,14 @@ int main()
 	theirPaddle.setSize(sf::Vector2f(10.0f, 40.0f));
 	theirPaddle.setFillColor(sf::Color::Red);
 
+	sf::RectangleShape puck;
+	puck.setSize(sf::Vector2f(10.0f, 10.0f));
+	puck.setFillColor(sf::Color::Blue);
+
+	puck.setPosition(sf::Vector2f(200.f,200.f));
+
+	
+	sf::Vector2f puckDir = sf::Vector2f(-0.1,0.0);
 
 	std::cout << "PONG!\n";
 
@@ -112,16 +121,81 @@ int main()
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && myPaddle.getPosition().y > 0)
 			{
 				moveVec = sf::Vector2f(0.0f, -0.5f);
+				lastDir = -1;
 				myPaddle.move(moveVec);
 
 			}
 			else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && myPaddle.getPosition().y < 360)
 			{
 				moveVec = sf::Vector2f(0.0f, 0.5f);
+				lastDir = 1;
 				myPaddle.move(moveVec);
 			}
 		}
 			
+		if (puck.getPosition().y < 10.f)
+		{
+			lastDir = 1;
+			//	window.close();
+		}
+
+		if (puck.getPosition().y > 390.f)
+		{
+			lastDir = -1;
+			//	window.close();
+		}
+
+		float puckY = (0.1f * lastDir);
+
+	//	if (puck.getPosition().y < 0.f)
+	//	{
+	//		puckY = 0.1;
+	//	//	window.close();
+	//	}
+
+	//	if (puck.getPosition().y > 380.f)
+	//	{
+	//		puckY = -0.1;
+		//	window.close();
+	//	}
+
+		std::cout << puck.getPosition().x << " - PuckY =" << puckY << "\n";
+
+		if (userType == 'c' && puck.getPosition().x >= 370.0f && puck.getPosition().y >= myPaddle.getPosition().y && puck.getPosition().y <= (myPaddle.getPosition().y + 40))
+		{
+			puckDir = sf::Vector2f(-0.1f, puckY);
+		}
+
+		if (userType == 's' && puck.getPosition().x <= 20.0f && puck.getPosition().y >= myPaddle.getPosition().y && puck.getPosition().y <= (myPaddle.getPosition().y + 40))
+		{
+			puckDir = sf::Vector2f(0.1, puckY);
+		}
+
+		if (userType == 's' && puck.getPosition().x >= 370.0f && puck.getPosition().y >= theirPaddle.getPosition().y && puck.getPosition().y <= (theirPaddle.getPosition().y + 40))
+		{
+			puckDir = sf::Vector2f(-0.1f, puckY);
+		}
+
+		if (userType == 'c' && puck.getPosition().x <= 20.0f && puck.getPosition().y >= theirPaddle.getPosition().y && puck.getPosition().y <= (theirPaddle.getPosition().y + 40))
+		{
+			puckDir = sf::Vector2f(0.1f, puckY);
+		}
+
+
+
+		puck.setPosition(puck.getPosition().x + puckDir.x, puck.getPosition().y + puckDir.y);
+
+		if (puck.getPosition().x < 0.0f || puck.getPosition().x > 400.0f)
+		{
+			puck.setPosition(200.0f,200.0f);
+		}
+
+
+
+	//	if (puck.getPosition().x < (myPaddle.getPosition().x+10) && puck.getPosition().y > myPaddle.getPosition().y && puck.getPosition().y < (myPaddle.getPosition().y + 40))
+	//	{
+	//		puckDir = -puckDir;
+		//}
 
 		//Set Shapes Pos
 		//myPaddle.setPosition(playerArray[myID].xx, playerArray[myID].yy);
@@ -147,6 +221,7 @@ int main()
 		window.clear();
 		window.draw(myPaddle);
 		window.draw(theirPaddle);
+		window.draw(puck);
 		window.display();
 		
 	}

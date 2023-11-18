@@ -1,3 +1,13 @@
 ﻿  client.cpp
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(34,15): warning C4309: 'initializing': truncation of constant value
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(27,15): warning C4309: 'initializing': truncation of constant value
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(90,46): warning C4305: 'argument': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(171,37): warning C4305: 'argument': truncation from 'double' to 'T'
+          with
+          [
+              T=float
+          ]
   sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\x64\Debug\sfmlProject.exe
