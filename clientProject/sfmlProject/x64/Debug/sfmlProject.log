@@ -1,2 +1,3 @@
 ﻿  client.cpp
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(34,15): warning C4309: 'initializing': truncation of constant value
   sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\x64\Debug\sfmlProject.exe
