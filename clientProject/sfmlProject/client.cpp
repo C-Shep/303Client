@@ -29,6 +29,7 @@ int main()
 
 	sf::Vector2f myPos, theirPos;
 	int lastDir = 1;
+	float puckY = 0.1;
 
 	do
 	{
@@ -132,53 +133,48 @@ int main()
 				myPaddle.move(moveVec);
 			}
 		}
-			
-		if (puck.getPosition().y < 10.f)
-		{
-			lastDir = 1;
-			//	window.close();
-		}
 
-		if (puck.getPosition().y > 390.f)
-		{
-			lastDir = -1;
-			//	window.close();
-		}
+		puckY = (0.1f * lastDir);
 
-		float puckY = (0.1f * lastDir);
-
-	//	if (puck.getPosition().y < 0.f)
-	//	{
-	//		puckY = 0.1;
-	//	//	window.close();
-	//	}
-
-	//	if (puck.getPosition().y > 380.f)
-	//	{
-	//		puckY = -0.1;
-		//	window.close();
-	//	}
-
+		//The worst code youve seen in your life
 		std::cout << puck.getPosition().x << " - PuckY =" << puckY << "\n";
 
 		if (userType == 'c' && puck.getPosition().x >= 370.0f && puck.getPosition().y >= myPaddle.getPosition().y && puck.getPosition().y <= (myPaddle.getPosition().y + 40))
 		{
 			puckDir = sf::Vector2f(-0.1f, puckY);
 		}
-
-		if (userType == 's' && puck.getPosition().x <= 20.0f && puck.getPosition().y >= myPaddle.getPosition().y && puck.getPosition().y <= (myPaddle.getPosition().y + 40))
+		else if (userType == 's' && puck.getPosition().x <= 20.0f && puck.getPosition().y >= myPaddle.getPosition().y && puck.getPosition().y <= (myPaddle.getPosition().y + 40))
 		{
 			puckDir = sf::Vector2f(0.1, puckY);
 		}
-
-		if (userType == 's' && puck.getPosition().x >= 370.0f && puck.getPosition().y >= theirPaddle.getPosition().y && puck.getPosition().y <= (theirPaddle.getPosition().y + 40))
+		else if (userType == 's' && puck.getPosition().x >= 370.0f && puck.getPosition().y >= theirPaddle.getPosition().y && puck.getPosition().y <= (theirPaddle.getPosition().y + 40))
 		{
 			puckDir = sf::Vector2f(-0.1f, puckY);
 		}
-
-		if (userType == 'c' && puck.getPosition().x <= 20.0f && puck.getPosition().y >= theirPaddle.getPosition().y && puck.getPosition().y <= (theirPaddle.getPosition().y + 40))
+		else if (userType == 'c' && puck.getPosition().x <= 20.0f && puck.getPosition().y >= theirPaddle.getPosition().y && puck.getPosition().y <= (theirPaddle.getPosition().y + 40))
 		{
 			puckDir = sf::Vector2f(0.1f, puckY);
+		}
+		else if (puck.getPosition().y > 390.f)
+		{
+			if (puckDir.x == 0.1)
+			{
+				puckDir = sf::Vector2f(-0.1f, -0.1);
+			}
+			else {
+				puckDir = sf::Vector2f(0.1f, -0.1);
+			}
+		}
+		else if (puck.getPosition().y < 10.f)
+		{
+			if (puckDir.x == 0.1)
+			{
+				puckDir = sf::Vector2f(0.1f, 0.1);
+			}
+			else {
+				puckDir = sf::Vector2f(-0.1f, 0.1);
+			}
+
 		}
 
 
