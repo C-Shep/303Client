@@ -1,33 +1,6 @@
 ﻿  client.cpp
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(27,15): warning C4309: 'initializing': truncation of constant value
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(90,46): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(170,37): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(183,39): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(186,38): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(192,37): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(195,38): warning C4305: 'argument': truncation from 'double' to 'T'
-          with
-          [
-              T=float
-          ]
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(13,15): warning C4309: 'initializing': truncation of constant value
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(19,19): warning C4305: 'initializing': truncation from 'double' to 'float'
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(146,40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(150,45): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\x64\Debug\sfmlProject.exe
