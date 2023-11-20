@@ -46,10 +46,14 @@ int main()
 
 		if (userType == 's')
 		{
+			sf::IpAddress ip = sf::IpAddress::getLocalAddress();
+
+			std::cout << "\nWelcome to Pong, Server Player. Your IP Address is: " << ip << "\n";
+			std::cout << "Waiting for Client Player to Connect...\n";
 			sf::TcpListener listener;
 			listener.listen(port);
 			listener.accept(socket);
-			std::cout << "\nWelcome to Pong, Server Player\n";
+			
 			myPos = sf::Vector2f(10.0f,112.5f);
 		}
 		else if (userType == 'c') {
