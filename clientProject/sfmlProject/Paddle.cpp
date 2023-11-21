@@ -1,5 +1,15 @@
 #include "Paddle.h"
 
+Paddle::Paddle()
+{
+
+}
+
+Paddle::~Paddle()
+{
+
+}
+
 //Move up and down within the game area
 void Paddle::movement(float dt)
 {
@@ -38,4 +48,9 @@ void Paddle::createShape(sf::Vector2f size, sf::Color colour, sf::Vector2f pos)
 	paddle.setFillColor(colour);
 	paddle.setPosition(pos);
 
+}
+
+float Paddle::getLastDir()
+{
+	return lastDir;
 }

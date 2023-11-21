@@ -132,9 +132,11 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Paddle.cpp" />
+    <ClCompile Include="Puck.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Paddle.h" />
+    <ClInclude Include="Puck.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

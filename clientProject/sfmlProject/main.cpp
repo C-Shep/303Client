@@ -4,6 +4,7 @@
 #include <string>
 #include <iostream>
 #include "Paddle.h"
+#include "Puck.h"
 
 #define SPEED 200
 
@@ -112,21 +113,6 @@ void eventManager(sf::RenderWindow &window)
 	}
 }
 
-void playerMove(int lastDir)
-{
-//	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && myPaddle.getPosition().y > 0)
-//	{
-//		lastDir = -1;
-//		myPaddle.move(sf::Vector2f(0.0f, -500.0f * dt));
-//
-//	}
-//	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down) && myPaddle.getPosition().y < 180)
-//	{
-//		lastDir = 1;
-//		myPaddle.move(sf::Vector2f(0.0f, 500.0f * dt));
-//	}
-}
-
 int main()
 {
 	//Create the TCP Sockets
@@ -172,19 +158,16 @@ int main()
 	//Create the 3 main objects, the Players Paddle, the Opponents Paddle and the Puck
 	Paddle myPaddle;
 	Paddle theirPaddle;
+	Puck puck;
 
-	//sf::RectangleShape myPaddle;
 	myPaddle.createShape(sf::Vector2f(10.0f, 40.0f), sf::Color::Green, myPos);
-
-//	sf::RectangleShape theirPaddle;
 	theirPaddle.createShape(sf::Vector2f(10.0f, 40.0f), sf::Color::Red, theirPos);
-
-	sf::RectangleShape puck;
 	sf::Vector2f puckStart = sf::Vector2f(200.f, 200.f);
-	puck = createShape(sf::Vector2f(10.0f, 10.0f), sf::Color::Blue, puckStart);
+	puck.createShape(sf::Vector2f(10.0f, 10.0f), sf::Color::Blue, puckStart);
 	
-	float puckY = 0.0f;//The Y direction of the Puck
-	sf::Vector2f puckDir = sf::Vector2f(-1.0, puckY);//The Pucks movement vector
+	//float puckY = 0.0f;//The Y direction of the Puck
+	puck.setDir(sf::Vector2f(-1.0, puck.getYDir()));
+	//sf::Vector2f puckDir = sf::Vector2f(-1.0, puckY);//The Pucks movement vector
 
 	//DEBUG
 	bool imHim = false;
@@ -205,36 +188,30 @@ int main()
 		//The worst code youve seen in your life
 		if (userType == 's')
 		{
-			float offset = 10.0f;
 
-			if ( puck.getPosition().x <= myPaddle.getPaddlePos().x + offset && puck.getPosition().y >= myPaddle.getPaddlePos().y - 10.0f && puck.getPosition().y <= (myPaddle.getPaddlePos().y + 40))
-			{
-				puckY = (1.f * lastDir) + rand()%3 + 0.1;
-				puckDir = sf::Vector2f(1.0f, puckY);
-			}else if (puck.getPosition().x >= theirPaddle.getPaddlePos().x - offset && puck.getPosition().y >= theirPaddle.getPaddlePos().y - 10.0f && puck.getPosition().y <= (theirPaddle.getPaddlePos().y + 40))
-			{
-				puckY = (1.f * theirLastDir) - rand()%3 + 0.1;
-				puckDir = sf::Vector2f(-1.f, puckY);
-			}
+			puck.bounceFromPaddle(myPaddle.getPaddlePos().x, myPaddle.getPaddlePos().y, theirPaddle.getPaddlePos().x, theirPaddle.getPaddlePos().y, myPaddle.getLastDir(), theirPaddle.getLastDir());
 
-			if (puck.getPosition().y > 215.f || puck.getPosition().y < 0.f)
+			std::cout << puck.getPuckPos().x << " - " << puck.getPuckPos().y << "\n";
+
+			//Bounce Off Wall
+			if (puck.getPuckPos().y > 215.f || puck.getPuckPos().y < 0.f)
 			{
-				puckDir.y *= -1;
-				if (puck.getPosition().y < 0.f)
+				puck.setDir(sf::Vector2f(puck.getDir().x, puck.getDir().y * -1));
+				if (puck.getPuckPos().y < 0.f)
 				{
-					puck.setPosition(puck.getPosition().x, 1.f);
+					puck.setPuckPos(puck.getPuckPos().x, 1.f);
 				}
 				else {
-					puck.setPosition(puck.getPosition().x, 214.f);
+					puck.setPuckPos(puck.getPuckPos().x, 214.f);
 				}
 				
 			}
 
-			puck.setPosition(puck.getPosition().x + (puckDir.x*SPEED)*dt, puck.getPosition().y + (puckDir.y * SPEED)* dt);
+			puck.setPuckPos(puck.getPuckPos().x + (puck.getDir().x*SPEED)*dt, puck.getPuckPos().y + (puck.getDir().y * SPEED)* dt);
 			
-			if (puck.getPosition().x < 0.0f || puck.getPosition().x > 400.0f)
+			if (puck.getPuckPos().x < 0.0f || puck.getPuckPos().x > 400.0f)
 			{
-				if (puck.getPosition().x < 0.0f)
+				if (puck.getPuckPos().x < 0.0f)
 				{
 					scores[1] += 1;
 				}
@@ -242,13 +219,13 @@ int main()
 				{
 					scores[0] += 1;
 				}
-				puck.setPosition(200.0f, 112.5f);
+				puck.setPuckPos(200.0f, 112.5f);
 			}
 		}
 
 		//Packet
 		sf::Packet packet;
-		packet << myPaddle.getPaddlePos().x << myPaddle.getPaddlePos().y << puck.getPosition().x << puck.getPosition().y << lastDir << scores[0] << scores[1];
+		packet << myPaddle.getPaddlePos().x << myPaddle.getPaddlePos().y << puck.getPuckPos().x << puck.getPuckPos().y << lastDir << scores[0] << scores[1];
 
 		//Send my data to the server
 		if (socket.send(packet) != sf::Socket::Done)
@@ -264,7 +241,7 @@ int main()
 				theirPaddle.setPaddlePos(theirPos.x, theirPos.y);
 				if (userType == 'c')
 				{
-					puck.setPosition(puckPos.x, puckPos.y);
+					puck.setPuckPos(puckPos.x, puckPos.y);
 					scores[0] = tempScores[0];
 					scores[1] = tempScores[1];
 				}
@@ -280,7 +257,7 @@ int main()
 		window.clear();
 		window.draw(myPaddle.getPaddle());
 		window.draw(theirPaddle.getPaddle());
-		window.draw(puck);
+		window.draw(puck.getPuck());
 		window.draw(scoreText);
 		window.display();
 		

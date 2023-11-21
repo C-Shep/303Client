@@ -1,5 +1,1 @@
-﻿  main.cpp
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(13,15): warning C4309: 'initializing': truncation of constant value
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(210,40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(214,45): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\x64\Debug\sfmlProject.exe
+﻿  sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\x64\Debug\sfmlProject.exe
