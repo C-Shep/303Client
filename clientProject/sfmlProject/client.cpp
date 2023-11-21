@@ -6,45 +6,18 @@
 
 #define SPEED 200
 
-int main()
+//Setup the connection, includes setting up server and connecting with the client. Using TCP connection as UDP isn't really needed with the simplicity of the game.
+char connectionSetup(char type, sf::Vector2f pos, sf::TcpSocket &sock)
 {
-	sf::IpAddress inputAddress;
-	sf::TcpSocket socket;
 	short port = 53000;
-	char userType = '?';
-
-	sf::Vector2f myPos, theirPos, puckPos;
-	int lastDir = 1;
-	int theirLastDir = 1;
-	float puckY = 0.1;
-	sf::Clock dtClock;
-	float dt = 1.0f;
-
-
-	srand((unsigned)time(NULL));
-
-	sf::Font font;
-
-	if (!font.loadFromFile("arial.ttf"))
-	{
-		//oh no :(
-	}
-
-	sf::Text scoreText;
-	scoreText.setFont(font);
-	scoreText.setCharacterSize(16);
-	scoreText.setFillColor(sf::Color::White);
-	scoreText.setPosition(200.f,32.f);
-
-	int scores[2] = {0 , -1};
 
 	do
 	{
 		std::cout << "Enter s for server player or c for client player - ";
-		std::cin >> userType;
+		std::cin >> type;
 		std::cout << "Thanks...";
-
-		if (userType == 's')
+	
+		if (type == 's')
 		{
 			sf::IpAddress ip = sf::IpAddress::getLocalAddress();
 
@@ -52,55 +25,126 @@ int main()
 			std::cout << "Waiting for Client Player to Connect...\n";
 			sf::TcpListener listener;
 			listener.listen(port);
-			listener.accept(socket);
-			
-			myPos = sf::Vector2f(10.0f,112.5f);
+			listener.accept(sock);
 		}
-		else if (userType == 'c') {
+		else if (type == 'c') {
+			sf::IpAddress inputAddress;
 			std::cout << "\nEnter the Address of Server: ";
 			std::cin >> inputAddress;
 			std::cout << "\nThanks, Client Player\n";
 
-			sf::Socket::Status status = socket.connect(inputAddress, 53000);
+			sf::Socket::Status status = sock.connect(inputAddress, 53000);
 			if (status != sf::Socket::Done)
 			{
 				std::cout << "Hmmm... Couldn't connect. Please try again!\n";
-				userType = '?';
+				type = '?';
 			}
 			else {
 				std::cout << "Connected to Server Player!\n";
-				myPos = sf::Vector2f(380.0f, 112.5f);
+				
 			}
 		}
 		else {
 			std::cout << "\nError! Invalid user type. Please try again.\n";
 		}
-	}while (userType != 's' && userType != 'c');
+	} while (type != 's' && type != 'c');
 
-	std::cout << "Let us...!\n";
+	return type;
+}
+
+//Set starting position for player
+sf::Vector2f getStartPos(char type)
+{
+	sf::Vector2f pos;
+	if (type == 's')
+	{
+		pos = sf::Vector2f(10.0f, 112.5f);
+	}
+	else {
+		pos = sf::Vector2f(380.0f, 112.5f);
+	}
+	return pos;
+}
+
+//load font
+sf::Font setupFont(sf::Font fnt, std::string file)
+{
+	if (!fnt.loadFromFile(file))
+	{
+		//oh no :(
+	}
+	return fnt;
+}
+
+//create a rectange shape. Used for both players and the puck.
+sf::RectangleShape createShape(sf::Vector2f size, sf::Color colour, sf::Vector2f pos)
+{
+	sf::RectangleShape shape;
+	shape.setSize(size);
+	shape.setFillColor(colour);
+	shape.setPosition(pos);
+
+	return shape;
+}
+
+int main()
+{
+	//Create the TCP Sockets
+	sf::TcpSocket socket;
+
+	//Create a Vector for the Players Position, the Opponents Position and the Pucks Position
+	sf::Vector2f myPos, theirPos, puckPos;
+
+	//The Last direction each player has moved in
+	int lastDir = 1;
+	int theirLastDir = 1;
+
+	//Setup Delta Time
+	sf::Clock dtClock;
+	float dt = 1.0f;
+	srand((unsigned)time(NULL));
+
+	//Setup Text For Score
+	sf::Font font;
+	font = setupFont(font,"arial.ttf");
+	sf::Text scoreText;
+	scoreText.setFont(font);
+	scoreText.setCharacterSize(16);
+	scoreText.setFillColor(sf::Color::White);
+	scoreText.setPosition(200.f, 32.f);
+
+	//Scores for each player, puck is created at 0,0 by default which scores automatically so player 2s score has to start at -1 to make it 0 when the puck is made
+	int scores[2] = { 0 , -1 };
+
+	//Setup the connection between server player and client player
+	//Usertype determines if the user is server or client side
+	char userType = '?';
+	userType = connectionSetup(userType, myPos, socket);
+
+	//set the starting position of your paddle based on usertype
+	myPos = getStartPos(userType);
+
+	std::cout << "Pong Time Start!\n";
 	
-
-
+	//Create the Game Window
 	sf::RenderWindow window(sf::VideoMode(400, 225), "Pong!");
 
+	//Create the 3 main objects, the Players Paddle, the Opponents Paddle and the Puck
 	sf::RectangleShape myPaddle;
-	myPaddle.setSize(sf::Vector2f(10.0f, 40.0f));
-	myPaddle.setFillColor(sf::Color::Green);
-	myPaddle.setPosition(myPos);
+	myPaddle = createShape(sf::Vector2f(10.0f, 40.0f), sf::Color::Green, myPos);
 
 	sf::RectangleShape theirPaddle;
-	theirPaddle.setSize(sf::Vector2f(10.0f, 40.0f));
-	theirPaddle.setFillColor(sf::Color::Red);
+	theirPaddle = createShape(sf::Vector2f(10.0f, 40.0f), sf::Color::Red, theirPos);
 
 	sf::RectangleShape puck;
-	puck.setSize(sf::Vector2f(10.0f, 10.0f));
-	puck.setFillColor(sf::Color::Blue);
-	puck.setPosition(sf::Vector2f(200.f,200.f));
+	sf::Vector2f puckStart = sf::Vector2f(200.f, 200.f);
+	puck = createShape(sf::Vector2f(10.0f, 10.0f), sf::Color::Blue, puckStart);
+	
+	float puckY = 0.0f;//The Y direction of the Puck
+	sf::Vector2f puckDir = sf::Vector2f(-1.0, puckY);//The Pucks movement vector
 
-	std::cout << "PONG!\n";
-
-	bool update = false;
-	sf::Vector2f puckDir = sf::Vector2f(-1.0, 0.0);
+	//DEBUG
+	bool imHim = false;
 
 	//Game Loop
 	while (window.isOpen())
@@ -114,20 +158,20 @@ int main()
 				window.close();
 			}
 
-	//		if (event.type == sf::Event::GainedFocus)
+		//	if (event.type == sf::Event::GainedFocus)
 		//	{ 
-		//		update = true;
+		//		imHim = true;
 		//	}
 
 		//	if (event.type == sf::Event::LostFocus)
 		//	{
-		//		update = false;
+		//		imHim = false;
 		//	}
 		}
 
 		dt = dtClock.restart().asSeconds();
 
-		//if (update)
+		//if (imHim)
 		//{
 			if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up) && myPaddle.getPosition().y > 0)
 			{
@@ -151,7 +195,7 @@ int main()
 				puckDir = sf::Vector2f(1.0f, puckY);
 			}else if (puck.getPosition().x >= 370.0f && puck.getPosition().y >= theirPaddle.getPosition().y - 10.0f && puck.getPosition().y <= (theirPaddle.getPosition().y + 40))
 			{
-				puckY = (1.f * theirLastDir) + rand()%3 + 0.1;
+				puckY = (1.f * theirLastDir) - rand()%3 + 0.1;
 				puckDir = sf::Vector2f(-1.f, puckY);
 			}
 
@@ -168,7 +212,7 @@ int main()
 				
 			}
 
-			puck.setPosition(puck.getPosition().x + (puckDir.x*SPEED)*dt, puck.getPosition().y + (puckDir.y * SPEED)* dt);
+			puck.setPosition(puck.getPosition().x + (sf::normalize puckDir.x*SPEED)*dt, puck.getPosition().y + (puckDir.y * SPEED)* dt);
 			
 			if (puck.getPosition().x < 0.0f || puck.getPosition().x > 400.0f)
 			{

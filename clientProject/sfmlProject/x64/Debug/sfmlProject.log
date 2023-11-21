@@ -1,6 +1,5 @@
 ﻿  client.cpp
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(13,15): warning C4309: 'initializing': truncation of constant value
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(19,19): warning C4305: 'initializing': truncation from 'double' to 'float'
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(150,40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(154,45): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(12,15): warning C4309: 'initializing': truncation of constant value
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(200,40): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\client.cpp(204,45): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\x64\Debug\sfmlProject.exe
