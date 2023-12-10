@@ -5,6 +5,7 @@
 #include <iostream>
 #include "Paddle.h"
 #include "Puck.h"
+#include "PuckMessage.h"
 
 #define SPEED 200
 
@@ -172,6 +173,8 @@ int main()
 	//DEBUG
 	bool imHim = false;
 
+	sf::Clock clock;
+
 	//Game Loop
 	while (window.isOpen())
 	{
@@ -180,9 +183,13 @@ int main()
 
 		dt = dtClock.restart().asSeconds();
 
+	//	PaddleMessage msg;
+
 		//if (imHim)
 		//{
 		myPaddle.movement(dt);
+
+
 		//}
 
 		//The worst code youve seen in your life

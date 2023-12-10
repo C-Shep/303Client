@@ -32,5 +32,8 @@
     <ClInclude Include="Puck.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PuckMessage.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

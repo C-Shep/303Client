@@ -54,3 +54,36 @@ float Paddle::getLastDir()
 {
 	return lastDir;
 }
+
+sf::Vector2f Paddle::prediction(float gameTime) {
+	float predictedX = -1.0f;
+	float predictedY = -1.0f;
+
+	const int msize = messages.size();
+	if (msize < 3) {
+		return sf::Vector2f(predictedX, predictedX);
+	}
+	const PaddleMessage& msg0 = messages[msize - 1];
+	const PaddleMessage& msg1 = messages[msize - 2];
+	const PaddleMessage& msg2 = messages[msize - 3];
+
+	// FIXME: Implement prediction here!
+	// You have:
+	// - the history of position messages received, in "m_Messages"
+	//   (msg0 is the most recent, msg1 the 2nd most recent, msg2 the 3rd most recent)
+	// - the current time, in "gameTime"
+	//
+	// You need to update:
+	// - the predicted position at the current time, in "predictedX" and "predictedY"
+
+	float spdX = (msg0.x - msg1.x) / (msg0.time);
+	float spdY = (msg0.y - msg1.y) / (msg0.time);
+
+	float dispX = spdX * gameTime;
+	float dispY = spdY * gameTime;
+
+	predictedX = msg0.x + dispX;
+	predictedY = msg0.y + dispY;
+
+	return sf::Vector2f(predictedX, predictedY);
+}

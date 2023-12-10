@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClInclude Include="Paddle.h" />
     <ClInclude Include="Puck.h" />
+    <ClInclude Include="PuckMessage.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
