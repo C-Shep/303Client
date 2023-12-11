@@ -1,5 +1,6 @@
 ﻿  main.cpp
 C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(15,15): warning C4309: 'initializing': truncation of constant value
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(229,185): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(229,159): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(237,185): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(237,159): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\sfmlProject\main.cpp(290,10): warning C4101: 'puckTime': unreferenced local variable
   sfmlProject.vcxproj -> C:\Users\crshe\OneDrive\Documents\Uni\303\303Client\clientProject\x64\Debug\sfmlProject.exe

@@ -123,6 +123,7 @@ int main()
 {
 	//Create the TCP Sockets
 	sf::TcpSocket socket;
+	
 
 	//Create a Vector for the Players Position, the Opponents Position and the Pucks Position
 	sf::Vector2f myPos, theirPos, puckPos;
@@ -182,6 +183,9 @@ int main()
 	//Game Loop
 	while (window.isOpen())
 	{
+		//Set socket blocking to be true
+		socket.setBlocking(true);
+
 		//SFML Events
 		eventManager(window);
 
@@ -283,16 +287,18 @@ int main()
 		{
 			int tempScores[2];
 			float theirTime;
+			float puckTime;
 			if (packet >> theirPos.x >> theirPos.y >> puckPos.x >> puckPos.y >> theirLastDir >> tempScores[0] >> tempScores[1] >> theirTime)
 			{
-				PaddleMessage theirMsg;
+				//Setup theirMsg
+				objectMessage theirMsg;
 				theirMsg.x = theirPos.x;
 				theirMsg.y = theirPos.y;
 				theirMsg.time = theirTime;
-
 				theirPaddle.setPaddlePos(theirPos.x,theirPaddle.getPaddlePos().y);
-
 				theirPaddle.messages.push_back(theirMsg);
+
+
 
 				if (userType == 'c')
 				{

@@ -1,6 +1,5 @@
 #pragma once
 
-struct PaddleMessage {
-
+struct objectMessage {
 	float x, y, time;
 };

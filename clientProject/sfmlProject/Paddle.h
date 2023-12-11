@@ -20,7 +20,7 @@ public:
 	float getLastDir();
 
 	sf::Vector2f lastPos;
-	std::vector<PaddleMessage> messages;
+	std::vector<objectMessage> messages;
 	float lastTime;
 
 private:

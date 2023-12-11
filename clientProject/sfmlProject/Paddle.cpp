@@ -75,8 +75,8 @@ float Paddle::prediction(float gameTime)
 		return predictedY;
 	}
 
-	const PaddleMessage& msg0 = messages[msize - 1];
-	const PaddleMessage& msg1 = messages[msize - 2];
+	const objectMessage& msg0 = messages[msize - 1];
+	const objectMessage& msg1 = messages[msize - 2];
 
 	if ((msg0.time) - (msg1.time) > 0.f)
 	{
@@ -85,6 +85,10 @@ float Paddle::prediction(float gameTime)
 		float dispY = spdY * gameTime;
 
 		predictedY = msg0.y + dispY;
+	}
+
+	if (msize > 4) {
+		messages.erase(messages.begin());
 	}
 
 	return predictedY;
