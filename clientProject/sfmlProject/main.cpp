@@ -90,6 +90,9 @@ sf::RectangleShape createShape(sf::Vector2f size, sf::Color colour, sf::Vector2f
 	return shape;
 }
 
+//DEBUG
+bool imHim = false;
+
 //Deal with any SFML Events
 void eventManager(sf::RenderWindow &window)
 {
@@ -102,17 +105,19 @@ void eventManager(sf::RenderWindow &window)
 			window.close();
 		}
 
-		//	if (event.type == sf::Event::GainedFocus)
-		//	{ 
-		//		imHim = true;
-		//	}
+		if (evnt.type == sf::Event::GainedFocus)
+		{ 
+			imHim = true;
+		}
 
-		//	if (event.type == sf::Event::LostFocus)
-		//	{
-		//		imHim = false;
-		//	}
+		if (evnt.type == sf::Event::LostFocus)
+		{
+			imHim = false;
+		}
 	}
 }
+
+float timeStep = 1.0f / 20.f;
 
 int main()
 {
@@ -170,10 +175,9 @@ int main()
 	puck.setDir(sf::Vector2f(-1.0, puck.getYDir()));
 	//sf::Vector2f puckDir = sf::Vector2f(-1.0, puckY);//The Pucks movement vector
 
-	//DEBUG
-	bool imHim = false;
-
 	sf::Clock clock;
+	float ttime = 0.0f;	//total time passed
+	float utime = 0.0f;	//updating time (capped at 1s, then reset)
 
 	//Game Loop
 	while (window.isOpen())
@@ -181,16 +185,46 @@ int main()
 		//SFML Events
 		eventManager(window);
 
-		dt = dtClock.restart().asSeconds();
+		dt = dtClock.restart().asSeconds();	//delta time
 
-	//	PaddleMessage msg;
+		ttime += dt;	//update total time
+		
+		//update update time
+		if (utime / timeStep < 1.0f)
+		{
+			utime += dt;
+		}
+		else {
+			utime = 0;
+		}
 
+		//Do prediction & interpolation
+		theirPaddle.setPredictedPos(theirPaddle.prediction(utime));
+
+		float lerpY = std::lerp(theirPaddle.getPaddlePos().y, theirPaddle.getPredictedPos(), std::min(1.0f, utime / timeStep));
+
+		if (theirPaddle.getPaddlePos().y != theirPaddle.getPredictedPos())
+		{
+			if (userType == 's')
+			{
+				theirPaddle.setPaddlePos(theirPos.x, lerpY);
+			}
+			else {
+				
+				theirPaddle.setPaddlePos(theirPos.x, lerpY);
+			}
+			
+		}
+
+		//DEBUG
+		//Movement
 		//if (imHim)
 		//{
-		myPaddle.movement(dt);
-
-
+			myPaddle.movement(dt);
 		//}
+
+		
+	//	theirPaddle.setPaddlePos(theirPaddle.getPredictedPos().x, theirPaddle.getPredictedPos().y);
 
 		//The worst code youve seen in your life
 		if (userType == 's')
@@ -214,8 +248,10 @@ int main()
 				
 			}
 
+			//Set the puck position
 			puck.setPuckPos(puck.getPuckPos().x + (puck.getDir().x*SPEED)*dt, puck.getPuckPos().y + (puck.getDir().y * SPEED)* dt);
 			
+			//Score
 			if (puck.getPuckPos().x < 0.0f || puck.getPuckPos().x > 400.0f)
 			{
 				if (puck.getPuckPos().x < 0.0f)
@@ -230,9 +266,11 @@ int main()
 			}
 		}
 
+		
+
 		//Packet
 		sf::Packet packet;
-		packet << myPaddle.getPaddlePos().x << myPaddle.getPaddlePos().y << puck.getPuckPos().x << puck.getPuckPos().y << lastDir << scores[0] << scores[1];
+		packet << myPaddle.getPaddlePos().x << myPaddle.getPaddlePos().y << puck.getPuckPos().x << puck.getPuckPos().y << lastDir << scores[0] << scores[1] << ttime;
 
 		//Send my data to the server
 		if (socket.send(packet) != sf::Socket::Done)
@@ -240,12 +278,22 @@ int main()
 			std::cout << "Error, Can't sent packet to other player :(\n";
 		}
 
+		//Receive Packet
 		if (socket.receive(packet) == sf::Socket::Done)
 		{
 			int tempScores[2];
-			if (packet >> theirPos.x >> theirPos.y >> puckPos.x >> puckPos.y >> theirLastDir >> tempScores[0] >> tempScores[1])
+			float theirTime;
+			if (packet >> theirPos.x >> theirPos.y >> puckPos.x >> puckPos.y >> theirLastDir >> tempScores[0] >> tempScores[1] >> theirTime)
 			{
-				theirPaddle.setPaddlePos(theirPos.x, theirPos.y);
+				PaddleMessage theirMsg;
+				theirMsg.x = theirPos.x;
+				theirMsg.y = theirPos.y;
+				theirMsg.time = theirTime;
+
+				theirPaddle.setPaddlePos(theirPos.x,theirPaddle.getPaddlePos().y);
+
+				theirPaddle.messages.push_back(theirMsg);
+
 				if (userType == 'c')
 				{
 					puck.setPuckPos(puckPos.x, puckPos.y);
@@ -255,9 +303,9 @@ int main()
 			}
 		}
 
+		//Draw Scene & Score
 		std::string s = std::to_string(scores[0]);
 		std::string ss = std::to_string(scores[1]);
-
 
 		scoreText.setString(s + "/" + ss);
 

@@ -12,13 +12,20 @@ public:
 	sf::RectangleShape getPaddle();
 	sf::Vector2f getPaddlePos();
 	void setPaddlePos(float xx, float yy);
+	void setPredictedPos(float yy);
+	float getPredictedPos();
 	void createShape(sf::Vector2f size, sf::Color colour, sf::Vector2f pos);
-	sf::Vector2f prediction(float dt);
+	float prediction(float dt);
 
 	float getLastDir();
+
+	sf::Vector2f lastPos;
+	std::vector<PaddleMessage> messages;
+	float lastTime;
 
 private:
 	sf::RectangleShape paddle;
 	int lastDir = 1;
-	std::vector<PaddleMessage> messages;
+	
+	float predictPos;
 };

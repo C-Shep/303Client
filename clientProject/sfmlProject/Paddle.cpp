@@ -41,13 +41,22 @@ void Paddle::setPaddlePos(float xx, float yy)
 	paddle.setPosition(xx, yy);
 }
 
+void Paddle::setPredictedPos(float yy)
+{
+	predictPos = yy;
+}
+
+float Paddle::getPredictedPos()
+{
+	return predictPos;
+}
+
 //create a rectange shape.
 void Paddle::createShape(sf::Vector2f size, sf::Color colour, sf::Vector2f pos)
 {
 	paddle.setSize(size);
 	paddle.setFillColor(colour);
 	paddle.setPosition(pos);
-
 }
 
 float Paddle::getLastDir()
@@ -55,35 +64,28 @@ float Paddle::getLastDir()
 	return lastDir;
 }
 
-sf::Vector2f Paddle::prediction(float gameTime) {
-	float predictedX = -1.0f;
+float Paddle::prediction(float gameTime) 
+{
 	float predictedY = -1.0f;
 
 	const int msize = messages.size();
-	if (msize < 3) {
-		return sf::Vector2f(predictedX, predictedX);
+
+	if (msize < 2)
+	{
+		return predictedY;
 	}
+
 	const PaddleMessage& msg0 = messages[msize - 1];
 	const PaddleMessage& msg1 = messages[msize - 2];
-	const PaddleMessage& msg2 = messages[msize - 3];
 
-	// FIXME: Implement prediction here!
-	// You have:
-	// - the history of position messages received, in "m_Messages"
-	//   (msg0 is the most recent, msg1 the 2nd most recent, msg2 the 3rd most recent)
-	// - the current time, in "gameTime"
-	//
-	// You need to update:
-	// - the predicted position at the current time, in "predictedX" and "predictedY"
+	if ((msg0.time) - (msg1.time) > 0.f)
+	{
+		float spdY = (msg0.y - msg1.y) / (msg0.time) - (msg1.time);
 
-	float spdX = (msg0.x - msg1.x) / (msg0.time);
-	float spdY = (msg0.y - msg1.y) / (msg0.time);
+		float dispY = spdY * gameTime;
 
-	float dispX = spdX * gameTime;
-	float dispY = spdY * gameTime;
+		predictedY = msg0.y + dispY;
+	}
 
-	predictedX = msg0.x + dispX;
-	predictedY = msg0.y + dispY;
-
-	return sf::Vector2f(predictedX, predictedY);
+	return predictedY;
 }
