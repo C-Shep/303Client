@@ -91,5 +91,14 @@ float Paddle::prediction(float gameTime)
 		messages.erase(messages.begin());
 	}
 
+
+	if (predictedY > 180)
+	{
+		predictedY = 180;
+	}
+	else if (predictedY < 0) {
+		predictedY = 0;
+	}
+
 	return predictedY;
 }

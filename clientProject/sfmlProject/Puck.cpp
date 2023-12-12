@@ -74,3 +74,55 @@ void Puck::setPuckPos(float xx, float yy)
 {
 	puck.setPosition(xx, yy);
 }
+
+sf::Vector2f Puck::prediction(float gameTime)
+{
+	float predictedX = -1.0f;
+	float predictedY = -1.0f;
+
+	const int msize = messages.size();
+
+	if (msize < 2)
+	{
+		return sf::Vector2f(predictedX,predictedY);
+	}
+
+	const objectMessage& msg0 = messages[msize - 1];
+	const objectMessage& msg1 = messages[msize - 2];
+
+	if ((msg0.time) - (msg1.time) > 0.f)
+	{
+		float spdX = (msg0.x - msg1.x) / (msg0.time) - (msg1.time);
+		float spdY = (msg0.y - msg1.y) / (msg0.time) - (msg1.time);
+
+		float dispX = spdX * gameTime;
+		float dispY = spdY * gameTime;
+
+		predictedX = msg0.x + dispX;
+		predictedY = msg0.y + dispY;
+	}
+
+	if (msize > 4) {
+		messages.erase(messages.begin());
+	}
+
+	if (predictedY > 200)
+	{
+		predictedY = 200;
+	}
+	else if (predictedY < 0) {
+		predictedY = 0;
+	}
+
+	return sf::Vector2f(predictedX, predictedY);
+}
+
+void Puck::setPredictedPos(sf::Vector2f newPos)
+{
+	predictPos = newPos;
+}
+
+sf::Vector2f Puck::getPredictedPos()
+{
+	return predictPos;
+}

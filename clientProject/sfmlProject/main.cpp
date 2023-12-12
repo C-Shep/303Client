@@ -167,16 +167,16 @@ int main()
 	Paddle theirPaddle;
 	Puck puck;
 
+	//Create Paddles and Puck Shapes
 	myPaddle.createShape(sf::Vector2f(10.0f, 40.0f), sf::Color::Green, myPos);
 	theirPaddle.createShape(sf::Vector2f(10.0f, 40.0f), sf::Color::Red, theirPos);
 	sf::Vector2f puckStart = sf::Vector2f(200.f, 200.f);
 	puck.createShape(sf::Vector2f(10.0f, 10.0f), sf::Color::Blue, puckStart);
-	
-	//float puckY = 0.0f;//The Y direction of the Puck
-	puck.setDir(sf::Vector2f(-1.0, puck.getYDir()));
-	//sf::Vector2f puckDir = sf::Vector2f(-1.0, puckY);//The Pucks movement vector
 
-	sf::Clock clock;
+	//The Pucks movement vector
+	puck.setDir(sf::Vector2f(-1.0, puck.getYDir()));
+	
+	//Timing for interpolation
 	float ttime = 0.0f;	//total time passed
 	float utime = 0.0f;	//updating time (capped at 1s, then reset)
 
@@ -202,23 +202,7 @@ int main()
 			utime = 0;
 		}
 
-		//Do prediction & interpolation
-		theirPaddle.setPredictedPos(theirPaddle.prediction(utime));
 
-		float lerpY = std::lerp(theirPaddle.getPaddlePos().y, theirPaddle.getPredictedPos(), std::min(1.0f, utime / timeStep));
-
-		if (theirPaddle.getPaddlePos().y != theirPaddle.getPredictedPos())
-		{
-			if (userType == 's')
-			{
-				theirPaddle.setPaddlePos(theirPos.x, lerpY);
-			}
-			else {
-				
-				theirPaddle.setPaddlePos(theirPos.x, lerpY);
-			}
-			
-		}
 
 		//DEBUG
 		//Movement
@@ -226,6 +210,20 @@ int main()
 		//{
 			myPaddle.movement(dt);
 		//}
+
+		//Do prediction & interpolation
+		theirPaddle.setPredictedPos(theirPaddle.prediction(utime));
+
+		float lerpY = std::lerp(theirPaddle.getPaddlePos().y, theirPaddle.getPredictedPos(), std::min(1.0f, utime / dt));
+
+		lerpY = std::clamp(lerpY,0.f,180.f);
+
+		if (theirPaddle.getPaddlePos().y != theirPaddle.getPredictedPos())
+		{
+			theirPaddle.setPaddlePos(theirPos.x, lerpY);
+		}
+
+
 
 		
 	//	theirPaddle.setPaddlePos(theirPaddle.getPredictedPos().x, theirPaddle.getPredictedPos().y);
@@ -270,7 +268,7 @@ int main()
 			}
 		}
 
-		
+
 
 		//Packet
 		sf::Packet packet;
@@ -298,7 +296,13 @@ int main()
 				theirPaddle.setPaddlePos(theirPos.x,theirPaddle.getPaddlePos().y);
 				theirPaddle.messages.push_back(theirMsg);
 
-
+				//Setup theirMsg
+				objectMessage puckMsg;
+				puckMsg.x = puckPos.x;
+				puckMsg.y = puckPos.y;
+				puckMsg.time = theirTime;
+			//	puck.setPuckPos(puckPos.x, puckPos.y);
+				puck.messages.push_back(puckMsg);
 
 				if (userType == 'c')
 				{
