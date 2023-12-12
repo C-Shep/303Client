@@ -223,32 +223,26 @@ int main()
 			theirPaddle.setPaddlePos(theirPos.x, lerpY);
 		}
 
-
-
-		
-	//	theirPaddle.setPaddlePos(theirPaddle.getPredictedPos().x, theirPaddle.getPredictedPos().y);
-
 		//The worst code youve seen in your life
 		if (userType == 's')
 		{
-
 			puck.bounceFromPaddle(myPaddle.getPaddlePos().x, myPaddle.getPaddlePos().y, theirPaddle.getPaddlePos().x, theirPaddle.getPaddlePos().y, myPaddle.getLastDir(), theirPaddle.getLastDir());
 
 			std::cout << puck.getPuckPos().x << " - " << puck.getPuckPos().y << "\n";
 
 			//Bounce Off Wall
-			if (puck.getPuckPos().y > 215.f || puck.getPuckPos().y < 0.f)
-			{
-				puck.setDir(sf::Vector2f(puck.getDir().x, puck.getDir().y * -1));
-				if (puck.getPuckPos().y < 0.f)
-				{
-					puck.setPuckPos(puck.getPuckPos().x, 1.f);
-				}
-				else {
-					puck.setPuckPos(puck.getPuckPos().x, 214.f);
-				}
-				
-			}
+			puck.bounceFromWall();
+		//	if (puck.getPuckPos().y > 215.f || puck.getPuckPos().y < 0.f)
+		//	{
+		//		puck.setDir(sf::Vector2f(puck.getDir().x, puck.getDir().y * -1));
+		//		if (puck.getPuckPos().y < 0.f)
+		//		{
+		//			puck.setPuckPos(puck.getPuckPos().x, 5.f);
+		//		}
+		//		else {
+		//			puck.setPuckPos(puck.getPuckPos().x, 200.f);
+		//		}
+		//	}
 
 			//Set the puck position
 			puck.setPuckPos(puck.getPuckPos().x + (puck.getDir().x*SPEED)*dt, puck.getPuckPos().y + (puck.getDir().y * SPEED)* dt);
@@ -267,8 +261,6 @@ int main()
 				puck.setPuckPos(200.0f, 112.5f);
 			}
 		}
-
-
 
 		//Packet
 		sf::Packet packet;
@@ -295,14 +287,6 @@ int main()
 				theirMsg.time = theirTime;
 				theirPaddle.setPaddlePos(theirPos.x,theirPaddle.getPaddlePos().y);
 				theirPaddle.messages.push_back(theirMsg);
-
-				//Setup theirMsg
-				objectMessage puckMsg;
-				puckMsg.x = puckPos.x;
-				puckMsg.y = puckPos.y;
-				puckMsg.time = theirTime;
-			//	puck.setPuckPos(puckPos.x, puckPos.y);
-				puck.messages.push_back(puckMsg);
 
 				if (userType == 'c')
 				{

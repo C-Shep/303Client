@@ -37,7 +37,17 @@ void Puck::bounceFromPaddle(float paddleX, float paddleY, float theirPaddleX, fl
 
 void Puck::bounceFromWall()
 {
-
+	if (puck.getPosition().y > 215.f || puck.getPosition().y < 0.f)
+	{
+		dir = (sf::Vector2f(dir.x, dir.y * -1));
+		if (puck.getPosition().y < 0.f)
+		{
+			puck.setPosition(puck.getPosition().x, 5.f);
+		}
+		else {
+			puck.setPosition(puck.getPosition().x, 214.f);
+		}
+	}
 }
 
 void Puck::setYDir(float newY)
