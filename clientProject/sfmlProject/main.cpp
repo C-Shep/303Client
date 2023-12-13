@@ -206,10 +206,10 @@ int main()
 
 		//DEBUG
 		//Movement
-		//if (imHim)
-		//{
+		if (imHim)
+		{
 			myPaddle.movement(dt);
-		//}
+		}
 
 		//Do prediction & interpolation
 		theirPaddle.setPredictedPos(theirPaddle.prediction(utime));
@@ -232,17 +232,6 @@ int main()
 
 			//Bounce Off Wall
 			puck.bounceFromWall();
-		//	if (puck.getPuckPos().y > 215.f || puck.getPuckPos().y < 0.f)
-		//	{
-		//		puck.setDir(sf::Vector2f(puck.getDir().x, puck.getDir().y * -1));
-		//		if (puck.getPuckPos().y < 0.f)
-		//		{
-		//			puck.setPuckPos(puck.getPuckPos().x, 5.f);
-		//		}
-		//		else {
-		//			puck.setPuckPos(puck.getPuckPos().x, 200.f);
-		//		}
-		//	}
 
 			//Set the puck position
 			puck.setPuckPos(puck.getPuckPos().x + (puck.getDir().x*SPEED)*dt, puck.getPuckPos().y + (puck.getDir().y * SPEED)* dt);
