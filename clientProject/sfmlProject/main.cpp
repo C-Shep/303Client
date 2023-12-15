@@ -91,7 +91,7 @@ sf::RectangleShape createShape(sf::Vector2f size, sf::Color colour, sf::Vector2f
 }
 
 //DEBUG
-bool imHim = false;
+bool imHim = true;
 
 //Deal with any SFML Events
 void eventManager(sf::RenderWindow &window)
@@ -124,7 +124,6 @@ int main()
 	//Create the TCP Sockets
 	sf::TcpSocket socket;
 	
-
 	//Create a Vector for the Players Position, the Opponents Position and the Pucks Position
 	sf::Vector2f myPos, theirPos, puckPos;
 
@@ -180,12 +179,12 @@ int main()
 	float ttime = 0.0f;	//total time passed
 	float utime = 0.0f;	//updating time (capped at 1s, then reset)
 
+	//Set socket blocking to be true
+	socket.setBlocking(true);
+
 	//Game Loop
 	while (window.isOpen())
 	{
-		//Set socket blocking to be true
-		socket.setBlocking(true);
-
 		//SFML Events
 		eventManager(window);
 
@@ -202,16 +201,13 @@ int main()
 			utime = 0;
 		}
 
-
-
-		//DEBUG
-		//Movement
-		if (imHim)
+		// ----- Movement -----
+		if (imHim)	//imHim is for debugging mostly, mainly for two open programs on one computer
 		{
-			myPaddle.movement(dt);
+			myPaddle.movement(dt);	//move paddle
 		}
 
-		//Do prediction & interpolation
+		//----- Do prediction & interpolation -----
 		theirPaddle.setPredictedPos(theirPaddle.prediction(utime));
 
 		float lerpY = std::lerp(theirPaddle.getPaddlePos().y, theirPaddle.getPredictedPos(), std::min(1.0f, utime / dt));
@@ -223,12 +219,11 @@ int main()
 			theirPaddle.setPaddlePos(theirPos.x, lerpY);
 		}
 
-		//The worst code youve seen in your life
+		//----- Puck Physics -----
 		if (userType == 's')
 		{
+			//Bounce Off Paddle
 			puck.bounceFromPaddle(myPaddle.getPaddlePos().x, myPaddle.getPaddlePos().y, theirPaddle.getPaddlePos().x, theirPaddle.getPaddlePos().y, myPaddle.getLastDir(), theirPaddle.getLastDir());
-
-			std::cout << puck.getPuckPos().x << " - " << puck.getPuckPos().y << "\n";
 
 			//Bounce Off Wall
 			puck.bounceFromWall();

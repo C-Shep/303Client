@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include "PuckMessage.h"
 
 class Puck
 {
@@ -22,15 +21,8 @@ public:
 	sf::Vector2f getPuckPos();
 	void setPuckPos(float xx, float yy);
 
-	sf::Vector2f prediction(float dt);
-	void setPredictedPos(sf::Vector2f newPos);
-	sf::Vector2f getPredictedPos();
-
-	std::vector<objectMessage> messages;
 private:
 	sf::RectangleShape puck;
-	
-	sf::Vector2f predictPos;
 	
 	sf::Vector2f dir = sf::Vector2f(1.0f,0.0f);
 	float YDir = -1.0f;

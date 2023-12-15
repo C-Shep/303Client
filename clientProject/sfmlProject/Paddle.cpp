@@ -26,26 +26,31 @@ void Paddle::movement(float dt)
 	}
 }
 
+//get the paddle shape
 sf::RectangleShape Paddle::getPaddle()
 {
 	return paddle;
 }
 
+//get the paddles position
 sf::Vector2f Paddle::getPaddlePos()
 {
 	return paddle.getPosition();
 }
 
+//set the paddles position
 void Paddle::setPaddlePos(float xx, float yy)
 {
 	paddle.setPosition(xx, yy);
 }
 
+//set the predicted position
 void Paddle::setPredictedPos(float yy)
 {
 	predictPos = yy;
 }
 
+//Get the predicted position
 float Paddle::getPredictedPos()
 {
 	return predictPos;
@@ -59,11 +64,13 @@ void Paddle::createShape(sf::Vector2f size, sf::Color colour, sf::Vector2f pos)
 	paddle.setPosition(pos);
 }
 
+//Get the last moved in direction
 float Paddle::getLastDir()
 {
 	return lastDir;
 }
 
+//Prediction for the Paddle
 float Paddle::prediction(float gameTime) 
 {
 	float predictedY = -1.0f;
